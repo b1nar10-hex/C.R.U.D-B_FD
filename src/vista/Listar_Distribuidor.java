@@ -4,20 +4,36 @@
  * and open the template in the editor.
  */
 package vista;
+import bd.ConexionBD;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * En esta clase se crean los botones y metdos correspondientes
+ * para mostrar y borrar los datos del distribuidor.
  * @author ASUS
  */
 public class Listar_Distribuidor extends javax.swing.JFrame {
-
+    
+    //creacion de un modelo tabla para implementar los datos en ella. 
+    DefaultTableModel tabla = new DefaultTableModel();
+    
+    //creacion de un array para almacenar objetos
+    Object[] arr = new Object[9];
+    
+    
     /**
      * Creates new form Listar_Distribuidor
      */
     public Listar_Distribuidor() {
         initComponents();
+        mostrarTablaDatos();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,16 +45,38 @@ public class Listar_Distribuidor extends javax.swing.JFrame {
 
         customPanel1 = new CustomComponents.CustomPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablad = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtfiltro = new javax.swing.JTextField();
+        btnfiltro = new javax.swing.JButton();
+        btnborrar = new javax.swing.JButton();
+        btnmodificar = new javax.swing.JButton();
+        btnvolver = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtrutmod = new javax.swing.JTextField();
+        txtnombremod = new javax.swing.JTextField();
+        txtcallemod = new javax.swing.JTextField();
+        txtnumcallemod = new javax.swing.JTextField();
+        txtcomunamod = new javax.swing.JTextField();
+        txtpaismod = new javax.swing.JTextField();
+        txtfonomod = new javax.swing.JTextField();
+        txtañomod = new javax.swing.JTextField();
+        jlistaid = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         customPanel1.setOpaque(false);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablad.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -49,12 +87,78 @@ public class Listar_Distribuidor extends javax.swing.JFrame {
                 "Rut", "Nombre", "Calle", "Numero de calle", "Comuna", "Pais", "Telefono", "Año de contrato"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablad);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("Distribuidores Asociados");
 
         jLabel2.setText("Filtrar");
+
+        btnfiltro.setText("Filtrar");
+
+        btnborrar.setText("Borrar");
+        btnborrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnborrarActionPerformed(evt);
+            }
+        });
+
+        btnmodificar.setText("Modificar");
+        btnmodificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnmodificarActionPerformed(evt);
+            }
+        });
+
+        btnvolver.setText("Volver");
+        btnvolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnvolverActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Rut");
+
+        jLabel4.setText("Nombre");
+
+        jLabel6.setText("Calle");
+
+        jLabel7.setText("Numero de calle");
+
+        jLabel8.setText("Comuna");
+
+        jLabel9.setText("Pais");
+
+        jLabel10.setText("Telefono");
+
+        jLabel11.setText("Año de contrato");
+
+        txtcomunamod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtcomunamodActionPerformed(evt);
+            }
+        });
+
+        txtfonomod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtfonomodActionPerformed(evt);
+            }
+        });
+
+        txtañomod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtañomodActionPerformed(evt);
+            }
+        });
+
+        jlistaid.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", " " }));
+        jlistaid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jlistaidActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Seleccione el id del distribuidor");
 
         javax.swing.GroupLayout customPanel1Layout = new javax.swing.GroupLayout(customPanel1);
         customPanel1.setLayout(customPanel1Layout);
@@ -62,31 +166,116 @@ public class Listar_Distribuidor extends javax.swing.JFrame {
             customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(customPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customPanel1Layout.createSequentialGroup()
-                .addContainerGap(209, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(177, 177, 177))
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(customPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customPanel1Layout.createSequentialGroup()
+                        .addComponent(btnvolver, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
+                        .addGap(37, 37, 37)
+                        .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(customPanel1Layout.createSequentialGroup()
+                                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtrutmod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(customPanel1Layout.createSequentialGroup()
+                                        .addGap(17, 17, 17)
+                                        .addComponent(jlistaid, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(181, 181, 181)
+                                .addComponent(btnborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtnombremod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtfonomod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtañomod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtcallemod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtcomunamod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtpaismod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtnumcallemod, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(35, 35, 35))))
             .addGroup(customPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(customPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtfiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnfiltro))
+                    .addGroup(customPanel1Layout.createSequentialGroup()
+                        .addGap(272, 272, 272)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(275, Short.MAX_VALUE))
+            .addGroup(customPanel1Layout.createSequentialGroup()
+                .addGap(383, 383, 383)
+                .addComponent(btnmodificar, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         customPanel1Layout.setVerticalGroup(
             customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customPanel1Layout.createSequentialGroup()
-                .addContainerGap(91, Short.MAX_VALUE)
+                .addGap(71, 71, 71)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(13, 13, 13)
                 .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(106, 106, 106))
+                    .addComponent(txtfiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnfiltro))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(customPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnvolver, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(9, 9, 9))
+                    .addGroup(customPanel1Layout.createSequentialGroup()
+                        .addComponent(jlistaid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtrutmod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtnombremod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtcallemod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtnumcallemod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtcomunamod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtpaismod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtfonomod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtañomod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnmodificar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -103,6 +292,73 @@ public class Listar_Distribuidor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnvolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvolverActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        new Interfaz_Principal().setVisible(true);
+    }//GEN-LAST:event_btnvolverActionPerformed
+
+    private void btnmodificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodificarActionPerformed
+        // TODO add your handling code here:
+       
+        String rutmod = txtrutmod.getText();
+        String nombremod = txtnombremod.getText();
+        String callemod = txtcallemod.getText();
+        int numcallemod = Integer.parseInt(txtnumcallemod.getText());
+        String comunamod = txtcomunamod.getText();
+        String paismod = txtpaismod.getText();
+        int fonomod = Integer.parseInt(txtfonomod.getText());
+        int añocontratomod = Integer.parseInt(txtañomod.getText());
+        
+        
+        try {
+   
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = ConexionBD.getConnection();
+
+            Statement st = conn.createStatement();
+            String sql = "update distribuidor set rut ='"+rutmod+"',nombre='"+nombremod+"',"
+                    + "calle='"+callemod+"',numero_de_calle='"+numcallemod+"',"
+                    + "comuna='"+comunamod+"',pais='"+paismod+"',telefono='"+fonomod+"',"
+                    + "año_de_contrato='"+añocontratomod+"'"
+                    + "where id_distribuidor ='"+jlistaid.getSelectedItem().toString()+"'";
+            
+            st.execute(sql);
+            
+            JOptionPane.showMessageDialog( null, "¡Datos modificados correctamente!"); 
+        }
+        catch(ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null,"Excepción de driver de MySQL: " + e,"ERROR",0);
+        }
+        catch(SQLException e) {
+            JOptionPane.showMessageDialog(null,"Excepción de SQL: " + e,"ERROR",0);
+        }
+
+    }//GEN-LAST:event_btnmodificarActionPerformed
+
+    private void btnborrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnborrarActionPerformed
+        // TODO add your handling code here:
+
+        borrardatos();
+    }//GEN-LAST:event_btnborrarActionPerformed
+
+    private void txtcomunamodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcomunamodActionPerformed
+        // TODO add your handling code here:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    }//GEN-LAST:event_txtcomunamodActionPerformed
+
+    private void txtfonomodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtfonomodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtfonomodActionPerformed
+
+    private void txtañomodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtañomodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtañomodActionPerformed
+
+    private void jlistaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jlistaidActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jlistaidActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -139,11 +395,145 @@ public class Listar_Distribuidor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnborrar;
+    private javax.swing.JButton btnfiltro;
+    private javax.swing.JButton btnmodificar;
+    private javax.swing.JButton btnvolver;
     private CustomComponents.CustomPanel customPanel1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JComboBox<String> jlistaid;
+    private javax.swing.JTable tablad;
+    private javax.swing.JTextField txtañomod;
+    private javax.swing.JTextField txtcallemod;
+    private javax.swing.JTextField txtcomunamod;
+    private javax.swing.JTextField txtfiltro;
+    private javax.swing.JTextField txtfonomod;
+    private javax.swing.JTextField txtnombremod;
+    private javax.swing.JTextField txtnumcallemod;
+    private javax.swing.JTextField txtpaismod;
+    private javax.swing.JTextField txtrutmod;
     // End of variables declaration//GEN-END:variables
-}
+    
+    //Metodos
+    
+    /**
+     * Muetra los datos de los distribuidores a traves de la tabla creada.(Default model).
+     * se utiliza el array creado anteriormente llenando este a traves 
+     * del metodo getString de la clase resultset.
+     * Luego se actualiza la tabla con los datos agregados.
+     */
+    private void mostrarTablaDatos(){
+        
+        tabla.addColumn("ID");
+        tabla.addColumn("Rut");
+        tabla.addColumn("Nombre");
+        tabla.addColumn("Calle");
+        tabla.addColumn("Numero de calle");
+        tabla.addColumn("Comuna");
+        tabla.addColumn("Pais");
+        tabla.addColumn("Telefono");
+        tabla.addColumn("Año de contrato");
+        
+         /*
+           se realiza el login correspondiente a la base de datos
+           para luego realizar la consulta mediante la clase 
+           statement y asi obtener los valores que se mostraran
+           en la tabla.
+         */
+        try { 
+            
+              Connection conn = ConexionBD.getConnection();
+            
+              Statement st = conn.createStatement();     
+              String   sql = "select * from distribuidor";    
+              
+               ResultSet rs = st.executeQuery(sql);
+               while( rs.next() ) {
+                   arr[0]= rs.getString("id_distribuidor");
+                   arr[1]= rs.getString("rut");
+                   arr[2]= rs.getString("nombre");                 
+                   arr[3]= rs.getString("calle");                 
+                   arr[4]= rs.getString("numero_de_calle");                   
+                   arr[5]= rs.getString("comuna");
+                   arr[6]= rs.getString("pais");
+                   arr[7]= rs.getString("telefono");
+                   arr[8]= rs.getString("año_de_contrato");
+                   
+                   tabla.addRow(arr);
+                   jlistaid.addItem(rs.getString("id_distribuidor"));
+                                                                                   
+               }         
+        } 
+        catch(ClassNotFoundException e) { 
+                   JOptionPane.showMessageDialog(null,"Excepción de driver de MySQL: " + e,"ERROR",0);           
+        }
+        catch(SQLException e) {
+                   JOptionPane.showMessageDialog(null,"Excepción de SQL: " + e,"ERROR",0);        
+        }
+
+              
+        tablad.setModel(tabla);
+        
+
+    }//fin mostrar tabla 
+    
+    /**
+     * Metodo para borrar distribuidor de la base de datos 
+     * utilizando lenguaje SQL. 
+     * Se utiliza la variable fila creada en este para luego utilizarla
+     * como parametro en el metodo removeRow() de la clase jtable.
+     */
+    private void borrardatos() {
+       
+        /*
+         * Se detecta si es que se presiona el boton eliminar sin seleccionar
+         * fila, mostrando por pantalla un mensaje de advertencia
+         */
+        if(tablad.getSelectedRow()<0){
+            JOptionPane.showMessageDialog( null, "¡Selecciona primero una fila para ELIMINAR!"); 
+        }else{
+        
+            try {
+                
+                //variable que almacena el metodo seleccion de fila
+                int fila=tablad.getSelectedRow();
+                
+                Class.forName("com.mysql.jdbc.Driver");             
+                Connection conn = ConexionBD.getConnection();
+
+                Statement st = conn.createStatement();               //se pasa var fila como parametro en el metodo que evalua la fila y columna seleccionada    
+                String   sql = "delete from distribuidor where id_distribuidor ='"+tablad.getValueAt(fila,0)+"'";
+                st.execute(sql);
+                
+                /* 
+                 * Se utiliza el metodo removeRow(),insertando como parametro
+                 * la var fila utilizada anteriormente para poder eliminar
+                 * la fila de manera automatica,sin la necesidad de actualizar datos.
+                */
+                tabla.removeRow(fila);
+                
+                JOptionPane.showMessageDialog( null, "¡Datos eliminados correctamente!"); 
+                
+            }         
+
+            catch(ClassNotFoundException e) {             
+                JOptionPane.showMessageDialog(null,"Excepción de driver de MySQL: " + e,"ERROR",0);         
+            }        
+            catch(SQLException e) {             
+                JOptionPane.showMessageDialog(null,"Excepción de SQL: " + e,"ERROR",0);         
+            } 
+        }
+    }//fin borrar datos
+    
+}//fin class

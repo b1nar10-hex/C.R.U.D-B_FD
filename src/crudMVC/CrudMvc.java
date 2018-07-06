@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package crudMVC;
-
+import vista.Interfaz_Principal;
 /**
  *
  * @author ASUS
@@ -16,6 +16,8 @@ public class CrudMvc {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Interfaz_Principal interfaz = new Interfaz_Principal();
+        interfaz.setVisible(true);
     }//fin main 
     
 }//fin class

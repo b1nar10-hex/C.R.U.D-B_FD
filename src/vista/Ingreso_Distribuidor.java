@@ -6,19 +6,18 @@
 package vista;
 
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Driver;
 import com.mysql.jdbc.Statement;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import bd.ConexionBD;
+
 
 /**
  *
  * @author ASUS
  */
 public class Ingreso_Distribuidor extends javax.swing.JFrame {
-
+    Listar_Distribuidor Ldistribuidor = new Listar_Distribuidor();
     /**
      * Creates new form Ingreso_Compra
      */
@@ -55,7 +54,7 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
         txtcontrato = new javax.swing.JTextField();
         btnvolver = new javax.swing.JButton();
         btnregistrod = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnlistard = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,10 +112,10 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Listar Distribuidores");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnlistard.setText("Listar Distribuidores");
+        btnlistard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnlistardActionPerformed(evt);
             }
         });
 
@@ -171,7 +170,7 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
                     .addGroup(customPanel1Layout.createSequentialGroup()
                         .addComponent(btnregistrod, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(jButton1))
+                        .addComponent(btnlistard))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -220,7 +219,7 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
                 .addGroup(customPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnregistrod, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnvolver, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnlistard, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(75, 75, 75))
         );
 
@@ -256,43 +255,15 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
         new Interfaz_Principal().setVisible(true);
     }//GEN-LAST:event_btnvolverActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnlistardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlistardActionPerformed
         // TODO add your handling code here:
         dispose();
         new Listar_Distribuidor().setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnlistardActionPerformed
 
     private void btnregistrodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregistrodActionPerformed
         // TODO add your handling code here:
-        rut = txtrut.getText();
-        nombre = txtnombre.getText();
-        calle = txtcalle.getText();
-        numcalle = Integer.parseInt(txtnumcalle.getText());
-        comuna = txtcomuna.getText();
-        pais = txtpais.getText();
-        telefono = Integer.parseInt(txttelefono.getText());
-        añocontrato = Integer.parseInt(txtcontrato.getText());
-        
-        /*se realiza la conexion a la base de datos utilizando
-          el paquete creado(bd).
-        */         
-        try {
-            
-            Connection conn = (Connection) ConexionBD.getConnection();
-            
-            Statement st =  (Statement) conn.createStatement();
-            String sql = "insert into distribuidor(rut,nombre,calle,numero_de_calle,comuna,pais,telefono,año_de_contrato) values"
-                        + " ('"+rut+"','"+nombre+"','"+calle+"','"+numcalle+"','"+comuna+"','"+pais+"','"+telefono+"','"+añocontrato+"')";
-            
-            st.execute(sql);
-            JOptionPane.showMessageDialog(null, "Datos ingresados correctamente","Ingreso",JOptionPane.INFORMATION_MESSAGE);
-        }
-        catch(ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "Excepcion de driver de MySQL: " + e, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        catch(SQLException e) {
-            JOptionPane.showMessageDialog(null, "Excepcion de SQL: " + e, "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        ingresodistribuidor();
     }//GEN-LAST:event_btnregistrodActionPerformed
 
     /**
@@ -332,10 +303,10 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnlistard;
     private javax.swing.JButton btnregistrod;
     private javax.swing.JButton btnvolver;
     private CustomComponents.CustomPanel customPanel1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -476,6 +447,40 @@ public class Ingreso_Distribuidor extends javax.swing.JFrame {
      */
     public void setAñocontrato(int añocontrato) {
         this.añocontrato = añocontrato;
+    }
+    
+    private void ingresodistribuidor(){
+        
+        rut = txtrut.getText();
+        nombre = txtnombre.getText();
+        calle = txtcalle.getText();
+        numcalle = Integer.parseInt(txtnumcalle.getText());
+        comuna = txtcomuna.getText();
+        pais = txtpais.getText();
+        telefono = Integer.parseInt(txttelefono.getText());
+        añocontrato = Integer.parseInt(txtcontrato.getText());
+        
+        /*se realiza la conexion a la base de datos utilizando
+          el paquete creado(bd).
+        */         
+        try {
+            
+            Connection conn = (Connection) ConexionBD.getConnection();
+            
+            Statement st =  (Statement) conn.createStatement();
+            String sql = "insert into distribuidor(rut,nombre,calle,numero_de_calle,comuna,pais,telefono,año_de_contrato) values"
+                        + " ('"+rut+"','"+nombre+"','"+calle+"','"+numcalle+"','"+comuna+"','"+pais+"','"+telefono+"','"+añocontrato+"')";
+            
+            st.execute(sql);
+            JOptionPane.showMessageDialog(null, "Datos ingresados correctamente","Ingreso",JOptionPane.INFORMATION_MESSAGE);
+            
+        }
+        catch(ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Excepcion de driver de MySQL: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        catch(SQLException e) {
+            JOptionPane.showMessageDialog(null, "Excepcion de SQL: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
 }
